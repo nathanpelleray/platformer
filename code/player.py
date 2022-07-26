@@ -26,12 +26,11 @@ class Player(pygame.sprite.Sprite):
         self.status = 'idle'
         self.facing_true = True
 
-
         # Rect
         self.rect = self.image.get_rect(topleft=pos)
 
     def import_character_assets(self):
-        character_path = '../graphics/character/'
+        character_path = '../graphics/player/'
         self.animations = {'idle': [], 'run': [], 'jump': [], 'fall': []}
 
         for animation in self.animations.keys():
@@ -52,6 +51,9 @@ class Player(pygame.sprite.Sprite):
         else:
             flipped_image = pygame.transform.flip(image, True, False)
             self.image = flipped_image
+
+        # A tester
+        self.rect = self.image.get_rect(topleft=self.rect.topleft)
 
     def get_status(self):
         if self.direction.y < 0:

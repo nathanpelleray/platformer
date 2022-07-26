@@ -1,4 +1,5 @@
 import pygame
+from pytmx.util_pygame import load_pygame
 
 from settings import LEVEL_MAP, TILE_SIZE, CAMERA_BORDERS
 from tile import Tile
@@ -19,14 +20,22 @@ class Level:
         self.setup_level()
 
     def setup_level(self):
-        for row_index, row in enumerate(LEVEL_MAP):
-            for col_index, col in enumerate(row):
-                x = col_index * TILE_SIZE
-                y = row_index * TILE_SIZE
-                if col == 'X':
-                    Tile((x, y), [self.visible_sprites, self.collision_sprites])
-                if col == 'P':
-                    self. player = Player((x, y), [self.visible_sprites, self.active_sprites], self.collision_sprites)
+        tmx_data = load_pygame('../map/tmx/map_test.tmx', pixelalpha=True)
+
+        # Map
+        for layout in tmx_data.visible_layers:
+            if hasattr(layout, 'data'):
+                for x, y, surf in layout.tiles():
+                    x *= TILE_SIZE
+                    y *= TILE_SIZE
+                    Tile((x, y), surf, [self.visible_sprites, self.collision_sprites])
+
+        # Entities
+        for obj in tmx_data.objects:
+            x = obj.x
+            y = obj.y
+            if obj.type == 'player':
+                self.player = Player((x, y), [self.visible_sprites, self.active_sprites], self.collision_sprites)
 
     def run(self):
         # Run the entire game (level)
