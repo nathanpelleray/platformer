@@ -2,7 +2,7 @@ import pygame
 from pytmx.util_pygame import load_pygame
 
 from settings import LEVEL_MAP, TILE_SIZE, CAMERA_BORDERS
-from tile import Tile
+from tile import Tile, Coin
 from player import Player
 
 
@@ -28,7 +28,7 @@ class Level:
                 for x, y, surf in layout.tiles():
                     x *= TILE_SIZE
                     y *= TILE_SIZE
-                    Tile((x, y), surf, [self.visible_sprites, self.collision_sprites])
+                    Tile((x, y), [self.visible_sprites, self.collision_sprites], surf)
 
         # Entities
         for obj in tmx_data.objects:
@@ -36,6 +36,8 @@ class Level:
             y = obj.y
             if obj.type == 'player':
                 self.player = Player((x, y), [self.visible_sprites, self.active_sprites], self.collision_sprites)
+            if obj.type == 'coin':
+                Coin((x, y), '../graphics/coins/', [self.visible_sprites, self.active_sprites, self.collision_sprites])
 
     def run(self):
         # Run the entire game (level)

@@ -1,5 +1,6 @@
 import pygame
 
+from debug import debug
 from utils import import_folder
 
 
@@ -25,6 +26,9 @@ class Player(pygame.sprite.Sprite):
         # Player Status
         self.status = 'idle'
         self.facing_true = True
+
+        # Player Coin
+        self.number_coin = 0
 
         # Rect
         self.rect = self.image.get_rect(topleft=pos)
@@ -85,6 +89,10 @@ class Player(pygame.sprite.Sprite):
     def horizontal_collisions(self):
         for sprite in self.collision_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
+                if sprite.type == 'coin':
+                    sprite.kill()
+                    self.number_coin += 1
+                    continue
                 if self.direction.x < 0:
                     self.rect.left = sprite.rect.right
                 if self.direction.x > 0:
@@ -93,6 +101,10 @@ class Player(pygame.sprite.Sprite):
     def vertical_collisions(self):
         for sprite in self.collision_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
+                if sprite.type == 'coin':
+                    sprite.kill()
+                    self.number_coin += 1
+                    continue
                 if self.direction.y < 0:
                     self.rect.top = sprite.rect.bottom
                     self.direction.y = 0
@@ -116,3 +128,4 @@ class Player(pygame.sprite.Sprite):
         self.vertical_collisions()
         self.get_status()
         self.animate()
+        debug(self.number_coin)
